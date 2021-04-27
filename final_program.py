@@ -95,11 +95,15 @@ Pump = Peristaltic_Pump(pin=18)
 Valve_Cathode = Valve(pin=12)
 Valve_Anode = Valve(pin=13)
 
+
+#Define Parameters
 Microstepping = 32
 Standard_Step_Angle = 1.8
 Pich_in_mm = 8
 Full_rev = 360
 Relation = (360 / 1.8) / 8
+Number_of_experiments = 3
+
 
 Stepper_Syringe_Pump.power_off()
 Stepper_Autosampler.power_off()
@@ -108,13 +112,48 @@ Steppers_Stirring.power_off()
 coordenades_mm = [00, 20, 40, 60, 80, 100, 156, 176, 196, 216, 236, 256]
 coordenades_residus = 128
 
-for index_vial in range(12):
+#Initial conditioning sequence
+Stepper_Autosampler.power_on()
+Stepper_Autosampler.set_dir(1)
+Stepper_Autosampler.mm(abs(coordenades_residus), Relation * Microstepping)
+Stepper_Autosampler.power_off()
+
+Pump.engage()
+time.sleep_ms(7500)
+Pump.disengage()
+
+Valve_Cathode.engage()
+time.sleep_ms(15000)
+Valve_Cathode.disengage()
+Valve_Anode.engage()
+time.sleep_ms(15000)
+Valve_Anode.disengage()
+
+Stepper_Syringe_Pump.power_on()
+Stepper_Syringe_Pump.set_dir(0)
+Stepper_Syringe_Pump.steps(0) ###18000
+Stepper_Syringe_Pump.power_off()
+
+Valve_Cathode.engage()
+time.sleep_ms(15000)
+Valve_Cathode.disengage()
+Valve_Anode.engage()
+time.sleep_ms(15000)
+Valve_Anode.disengage()
+
+Stepper_Autosampler.power_on()
+Stepper_Autosampler.set_dir(0)
+Stepper_Autosampler.mm(abs(coordenades_residus), Relation * Microstepping)
+Stepper_Autosampler.power_off()
+
+#Set of experiments
+for index_vial in range(Number_of_experiments):
 
     # REACCIO (Sequencia de codi de tota la reacció)
 
     Stepper_Syringe_Pump.power_on()
     Stepper_Syringe_Pump.set_dir(0)
-    Stepper_Syringe_Pump.steps(10000)
+    Stepper_Syringe_Pump.steps(9000)
     Stepper_Syringe_Pump.power_off()
 
     Steppers_Stirring.power_on()
@@ -125,10 +164,10 @@ for index_vial in range(12):
     Steppers_Stirring.power_off()
 
     Valve_Cathode.engage()
-    time.sleep_ms(10000)
+    time.sleep_ms(15000)
     Valve_Cathode.disengage()
     Valve_Anode.engage()
-    time.sleep_ms(10000)
+    time.sleep_ms(15000)
     Valve_Anode.disengage()
 
     travel = coordenades_residus - coordenades_mm[index_vial]
@@ -145,7 +184,7 @@ for index_vial in range(12):
     # LLIMPIAT (Codi del Limpiat)
 
     Pump.engage()
-    time.sleep_ms(9000)
+    time.sleep_ms(8000)
     Pump.disengage()
 
     Steppers_Stirring.power_on()
@@ -156,10 +195,10 @@ for index_vial in range(12):
     Steppers_Stirring.power_off()
 
     Valve_Cathode.engage()
-    time.sleep_ms(20000)
+    time.sleep_ms(15000)
     Valve_Cathode.disengage()
     Valve_Anode.engage()
-    time.sleep_ms(20000)
+    time.sleep_ms(15000)
     Valve_Anode.disengage()
 
     travel = coordenades_residus - coordenades_mm[index_vial + 1]

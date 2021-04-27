@@ -89,7 +89,7 @@ class Peristaltic_Pump:
         return self.pin.value
 
 
-Stepper_Syringe_Pump = Precision_Stepper(step_pin=2, dir_pin=15, en_pin=4, step_time=1)
+Stepper_Syringe_Pump = Precision_Stepper(step_pin=2, dir_pin=15, en_pin=4, step_time=1000)
 Stepper_Autosampler = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=5, step_time=1)
 Steppers_Stirring = Precision_Stepper(step_pin=14, dir_pin=27, en_pin=26, step_time=1000)
 Pump = Peristaltic_Pump(pin=18)
@@ -103,6 +103,5 @@ Full_rev = 360
 Relation = (360 / 1.8) / 8
 
 Stepper_Syringe_Pump.power_on()
-Stepper_Syringe_Pump.set_dir(1)
-Stepper_Syringe_Pump.steps(200000)
-Stepper_Syringe_Pump.power_off()
+Stepper_Autosampler.power_on()
+Steppers_Stirring.power_on()
