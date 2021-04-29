@@ -96,13 +96,19 @@ Valve_Cathode = Valve(pin=12)
 Valve_Anode = Valve(pin=13)
 
 
-#Define Parameters
+#Electronics Parameters
 Microstepping = 32
 Standard_Step_Angle = 1.8
 Pich_in_mm = 8
 Full_rev = 360
 Relation = (360 / 1.8) / 8
+
+#General parameters
 Number_of_experiments = 3
+Number_of_cleaning_cycles = 2
+Experiment_Duration_in_minutes = 1 # Only integrers
+#Cleaning_cycle_duration_in_minutes = 1
+#Stirring_rate_rpm = 100 ### do not put rpm higer than
 
 
 Stepper_Syringe_Pump.power_off()
@@ -112,7 +118,7 @@ Steppers_Stirring.power_off()
 coordenades_mm = [00, 20, 40, 60, 80, 100, 156, 176, 196, 216, 236, 256]
 coordenades_residus = 128
 
-#Initial conditioning sequence
+#Initial system conditioning sequence
 Stepper_Autosampler.power_on()
 Stepper_Autosampler.set_dir(1)
 Stepper_Autosampler.mm(abs(coordenades_residus), Relation * Microstepping)
@@ -131,7 +137,7 @@ Valve_Anode.disengage()
 
 Stepper_Syringe_Pump.power_on()
 Stepper_Syringe_Pump.set_dir(0)
-Stepper_Syringe_Pump.steps(0) ###18000
+Stepper_Syringe_Pump.steps(18000) # 18000 standard value
 Stepper_Syringe_Pump.power_off()
 
 Valve_Cathode.engage()
@@ -156,12 +162,19 @@ for index_vial in range(Number_of_experiments):
     Stepper_Syringe_Pump.steps(9000)
     Stepper_Syringe_Pump.power_off()
 
+    print("Power on the potentiostat in 10 seconds")
+    time.sleep_ms(10000)
+    print("Experiment started")
+
     Steppers_Stirring.power_on()
     Steppers_Stirring.set_dir(1)
-    deadline = ticks_add(time.ticks_ms(), 1000 * 10)
+    deadline = ticks_add(time.ticks_ms(), 1000 * 60 * Experiment_Duration_in_minutes)
     while ticks_diff(deadline, time.ticks_ms()) > 0:
         Steppers_Stirring.steps(1)
     Steppers_Stirring.power_off()
+
+    print("Experiment ended you have 1 min to save the data")
+    time.sleep_ms(10000)
 
     Valve_Cathode.engage()
     time.sleep_ms(15000)
@@ -181,33 +194,42 @@ for index_vial in range(Number_of_experiments):
     Stepper_Autosampler.mm(abs(travel), Relation * Microstepping)
     Stepper_Autosampler.power_off()
 
+    print("Cleaning Started")
+
     # LLIMPIAT (Codi del Limpiat)
 
-    Pump.engage()
-    time.sleep_ms(8000)
-    Pump.disengage()
+    for cleaning_batches in range(Number_of_cleaning_cycles):
 
-    Steppers_Stirring.power_on()
-    Steppers_Stirring.set_dir(1)
-    deadline = ticks_add(time.ticks_ms(), 1000 * 10)
-    while ticks_diff(deadline, time.ticks_ms()) > 0:
-        Steppers_Stirring.steps(1)
-    Steppers_Stirring.power_off()
+        Pump.engage()
+        time.sleep_ms(8000)
+        Pump.disengage()
 
-    Valve_Cathode.engage()
-    time.sleep_ms(15000)
-    Valve_Cathode.disengage()
-    Valve_Anode.engage()
-    time.sleep_ms(15000)
-    Valve_Anode.disengage()
+        Steppers_Stirring.power_on()
+        Steppers_Stirring.set_dir(1)
+        deadline = ticks_add(time.ticks_ms(), 1000 * 10)
+        while ticks_diff(deadline, time.ticks_ms()) > 0:
+            Steppers_Stirring.steps(1)
+        Steppers_Stirring.power_off()
 
-    travel = coordenades_residus - coordenades_mm[index_vial + 1]
+        Valve_Cathode.engage()
+        time.sleep_ms(15000)
+        Valve_Cathode.disengage()
+        Valve_Anode.engage()
+        time.sleep_ms(15000)
+        Valve_Anode.disengage()
 
-    if travel > 0:
-        Stepper_Autosampler.set_dir(0)
-    else:
-        Stepper_Autosampler.set_dir(1)
+        travel = coordenades_residus - coordenades_mm[cleaning_batches + 1]
 
-    Stepper_Autosampler.power_on()
-    Stepper_Autosampler.mm(abs(travel), Relation * Microstepping)
-    Stepper_Autosampler.power_off()
+        if travel > 0:
+            Stepper_Autosampler.set_dir(0)
+        else:
+            Stepper_Autosampler.set_dir(1)
+
+        Stepper_Autosampler.power_on()
+        Stepper_Autosampler.mm(abs(travel), Relation * Microstepping)
+        Stepper_Autosampler.power_off()
+
+        print("Cleaning batch " + str(cleaning_batches + 1) + " done")
+
+    print("Cleaning Ended")
+
