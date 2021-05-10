@@ -1,3 +1,4 @@
+# Escribe tu código aquí :-)
 import time
 from utime import ticks_add
 from utime import ticks_diff
@@ -88,26 +89,36 @@ class Peristaltic_Pump:
         """Return status of the valve. 0 disengaged - 1 engaged"""
         return self.pin.value
 
-Stepper_Syringe_Pump = Precision_Stepper(step_pin=2, dir_pin=15, en_pin=4, step_time=1000)
-Stepper_Autosampler = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=5, step_time=1000)
-Steppers_Stirring = Precision_Stepper(step_pin=14, dir_pin=27, en_pin=26, step_time=1000)
-Pump = Peristaltic_Pump(pin=18)
-Valve_Cathode = Valve(pin=12)
-Valve_Anode = Valve(pin=13)
+Stepper_Syringe_Pump = Precision_Stepper(step_pin=32, dir_pin=5, en_pin=33, step_time=1000)
+Stepper_Autosampler = Precision_Stepper(step_pin=2, dir_pin=4, en_pin=15, step_time=1)
+Steppers_Stirring = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=18, step_time=150000)
+Pump = Peristaltic_Pump(pin=26) #18
+Valve_Cathode = Valve(pin=27)
+Valve_Anode = Valve(pin=14)
 
 #Electronics Parameters
-Microstepping = 32
+Microstepping = 1 #### integrers > 1
 Standard_Step_Angle = 1.8
 Pich_in_mm = 8
 Full_rev = 360
 Relation = (360 / 1.8) / 8
+Step_angle = 1.8 / Microstepping
+
 
 #General parameters
-Number_of_experiments = 12
+Number_of_experiments = 1
 Number_of_cleaning_cycles = 5
-Experiment_Duration_in_minutes = 1 # Only integrers
-Cleaning_cycle_duration_in_seconds = 1
-Stirring_rate_rpm = 100 ### do not put rpm higer than X
+Experiment_Duration_in_minutes = 4 # Only integrers
+Cleaning_cycle_duration_in_seconds = 10
+Stirring_rate_rpm = 150 ### do not put rpm higer than 150
+#############################################################
+
+
+Tanto_por_uno_vuelta = Step_angle / 360
+delay_in_minutes = (Tanto_por_uno_vuelta / 2) / Stirring_rate_rpm
+delay_in_seconds = delay_in_minutes * 60
+delay_in_microseconds = delay_in_seconds * 1000000
+Number_of_experiments_Corrected = Number_of_experiments - 1
 
 
 Stepper_Syringe_Pump.power_off()
@@ -128,29 +139,29 @@ Stepper_Autosampler.power_off()
 
 #Fill cleaning water tubes
 Pump.engage()
-time.sleep_ms(1) #7500
+time.sleep_ms(7500) #7500
 Pump.disengage()
 
 #Remove excess of water
 Valve_Cathode.engage()
-time.sleep_ms(1) #15000
+time.sleep_ms(15000) #15000
 Valve_Cathode.disengage()
 Valve_Anode.engage()
-time.sleep_ms(1) #15000
+time.sleep_ms(15000) #15000
 Valve_Anode.disengage()
 
 #Fill injection pump tubes
 Stepper_Syringe_Pump.power_on()
 Stepper_Syringe_Pump.set_dir(0)
-Stepper_Syringe_Pump.steps(1) # 18000 standard value
+Stepper_Syringe_Pump.steps(12000) # 18000 standard value
 Stepper_Syringe_Pump.power_off()
 
 #Remove excess of reactive
 Valve_Cathode.engage()
-time.sleep_ms(1) #15000
+time.sleep_ms(15000) #15000
 Valve_Cathode.disengage()
 Valve_Anode.engage()
-time.sleep_ms(1) #15000
+time.sleep_ms(15000) #15000
 Valve_Anode.disengage()
 
 #Move autosampler from residues to vial 1
@@ -166,7 +177,7 @@ for index_vial in range(Number_of_experiments):
 
     Stepper_Syringe_Pump.power_on()
     Stepper_Syringe_Pump.set_dir(0)
-    Stepper_Syringe_Pump.steps(9000)
+    Stepper_Syringe_Pump.steps(8500)
     Stepper_Syringe_Pump.power_off()
 
     Start = str(input(""))
@@ -176,12 +187,7 @@ for index_vial in range(Number_of_experiments):
     time.sleep_ms(5000)
     print("Experiment " + str(index_vial + 1) + " started")
 
-    Steppers_Stirring.power_on()
-    Steppers_Stirring.set_dir(1)
-    deadline = ticks_add(time.ticks_ms(), 1000 * 60 * Experiment_Duration_in_minutes)
-    while ticks_diff(deadline, time.ticks_ms()) > 0:
-        Steppers_Stirring.steps(1)
-    Steppers_Stirring.power_off()
+    time.sleep_ms(Experiment_Duration_in_minutes * 1000 * 60)
 
     print("Experiment ended store your data")
 

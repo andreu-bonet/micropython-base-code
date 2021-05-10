@@ -89,16 +89,26 @@ class Peristaltic_Pump:
         return self.pin.value
 
 
-Stepper_Syringe_Pump = Precision_Stepper(step_pin=2, dir_pin=15, en_pin=4, step_time=1000)
-Stepper_Autosampler = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=5, step_time=1)
-Steppers_Stirring = Precision_Stepper(step_pin=14, dir_pin=27, en_pin=26, step_time=1000)
-Pump = Peristaltic_Pump(pin=18)
-Valve_Cathode = Valve(pin=12)
-Valve_Anode = Valve(pin=13)
+Stepper_Syringe_Pump = Precision_Stepper(step_pin=32, dir_pin=5, en_pin=33, step_time=1000)
+Stepper_Autosampler = Precision_Stepper(step_pin=2, dir_pin=4, en_pin=15, step_time=1000)
+Steppers_Stirring = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=18, step_time=1000)
+Pump = Peristaltic_Pump(pin=26) #18
+Valve_Cathode = Valve(pin=27)
+Valve_Anode = Valve(pin=14)
+
+
+Stepper_Syringe_Pump.power_off()
+Stepper_Autosampler.power_off()
+Steppers_Stirring.power_off()
+Pump.engage()
+Pump.disengage()
+
 
 Valve_Cathode.engage()
-time.sleep_ms(10000)
+time.sleep_ms(4000)
 Valve_Cathode.disengage()
+
+
 Valve_Anode.engage()
-time.sleep_ms(10000)
+time.sleep_ms(4000)
 Valve_Anode.disengage()

@@ -97,23 +97,20 @@ def Stepper_constant_speed(stepper, speed, time=1):
     """
     stepper.steps(time / (2 * stepper.step_time))
 
+####
 
-Stepper_Syringe_Pump = Precision_Stepper(step_pin=2, dir_pin=15, en_pin=4, step_time=1000)
-Stepper_Autosampler = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=5, step_time=1000)
-Steppers_Stirring = Precision_Stepper(step_pin=14, dir_pin=27, en_pin=26, step_time=1000)
-Pump = Peristaltic_Pump(pin=18)
-Valve_Cathode = Valve(pin=12)
+Stepper_Syringe_Pump = Precision_Stepper(step_pin=32, dir_pin=5, en_pin=33, step_time=1000)
+Stepper_Autosampler = Precision_Stepper(step_pin=2, dir_pin=4, en_pin=15, step_time=1000)
+Steppers_Stirring = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=18, step_time=75000)
+Pump = Peristaltic_Pump(pin=26) #18
+Valve_Cathode = Valve(pin=27)
 Valve_Anode = Valve(pin=13)
-
-Stepper_Syringe_Pump.power_off()
-Stepper_Autosampler.power_off()
-Steppers_Stirring.power_off()
 
 Steppers_Stirring.power_on()
 Steppers_Stirring.set_dir(1)
-deadline = ticks_add(time.ticks_ms(), 1000 * 10)
+deadline = ticks_add(time.ticks_ms(), 1000 * 60 * 1)
 while ticks_diff(deadline, time.ticks_ms()) > 0:
     Steppers_Stirring.steps(1)
 Steppers_Stirring.power_off()
 
-print("Done")
+#
