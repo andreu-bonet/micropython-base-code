@@ -102,16 +102,8 @@ Pich_in_mm = 8
 Full_rev = 360
 Relation = (360 / 1.8) / 8
 
-Stepper_Autosampler.power_on()
-Stepper_Autosampler.set_dir(0)
-Stepper_Autosampler.steps(5000)
-Stepper_Autosampler.power_off()
-
 Stepper_Syringe_Pump.power_on()
 Stepper_Syringe_Pump.set_dir(1)
 Stepper_Syringe_Pump.steps(5000)
 Stepper_Syringe_Pump.power_off()
 
-Pump.engage()
-time.sleep_ms(10000)
-Pump.disengage()
