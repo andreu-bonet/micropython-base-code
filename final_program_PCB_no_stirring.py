@@ -113,7 +113,6 @@ Cleaning_cycle_duration_in_seconds = 10
 Stirring_rate_rpm = 150 ### do not put rpm higer than 150
 #############################################################
 
-
 Tanto_por_uno_vuelta = Step_angle / 360
 delay_in_minutes = (Tanto_por_uno_vuelta / 2) / Stirring_rate_rpm
 delay_in_seconds = delay_in_minutes * 60
@@ -135,7 +134,6 @@ Stepper_Autosampler.power_on()
 Stepper_Autosampler.set_dir(1)
 Stepper_Autosampler.mm(abs(coordenades_residus), Relation * Microstepping)
 Stepper_Autosampler.power_off()
-
 
 #Fill cleaning water tubes
 Pump.engage()
