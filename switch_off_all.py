@@ -1,4 +1,5 @@
 # Escribe tu código aquí :-)
+# Escribe tu código aquí :-)
 from machine import Pin
 import time
 from time import sleep_us
@@ -87,11 +88,11 @@ class Peristaltic_Pump:
         return self.pin.value
 
 
-Stepper_Syringe_Pump = Precision_Stepper(step_pin=2, dir_pin=15, en_pin=4, step_time=1000)
-Stepper_Autosampler = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=5, step_time=1)
-Steppers_Stirring = Precision_Stepper(step_pin=14, dir_pin=27, en_pin=26, step_time=1000)
-Pump = Peristaltic_Pump(pin=18)
-Valve_Cathode = Valve(pin=12)
+Stepper_Syringe_Pump = Precision_Stepper(step_pin=32, dir_pin=5, en_pin=33, step_time=1000)
+Stepper_Autosampler = Precision_Stepper(step_pin=2, dir_pin=4, en_pin=15, step_time=1000)
+Steppers_Stirring = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=18, step_time=1000)
+Pump = Peristaltic_Pump(pin=26) #18
+Valve_Cathode = Valve(pin=27)
 Valve_Anode = Valve(pin=13)
 
 Microstepping = 32
@@ -104,33 +105,8 @@ Stepper_Syringe_Pump.power_off()
 Stepper_Autosampler.power_off()
 Steppers_Stirring.power_off()
 
-coordenades_mm = [00, 20, 40, 60, 80, 100, 156, 176, 196, 216, 236, 256]
-coordenades_residus = 128
+Pump.engage()
+Pump.disengage()
 
-for index_vial in range(12):
-
-    time.sleep_ms(1000)  # REACCIO (Sequencia de codi de tota la reacció)
-
-    travel = coordenades_residus - coordenades_mm[index_vial]
-
-    if travel > 0:
-        Stepper_Autosampler.set_dir(1)
-    else:
-        Stepper_Autosampler.set_dir(0)
-
-    Stepper_Autosampler.power_on()
-    Stepper_Autosampler.mm(abs(travel), Relation * Microstepping)
-    Stepper_Autosampler.power_off()
-
-    time.sleep_ms(1000)  # LLIMPIAT (Codi del Limpiat)
-
-    travel = coordenades_residus - coordenades_mm[index_vial + 1]
-
-    if travel > 0:
-        Stepper_Autosampler.set_dir(0)
-    else:
-        Stepper_Autosampler.set_dir(1)
-
-    Stepper_Autosampler.power_on()
-    Stepper_Autosampler.mm(abs(travel), Relation * Microstepping)
-    Stepper_Autosampler.power_off()
+Valve_Cathode.disengage()
+Valve_Anode.disengage()

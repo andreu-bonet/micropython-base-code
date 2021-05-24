@@ -88,8 +88,7 @@ class Peristaltic_Pump:
         """Return status of the valve. 0 disengaged - 1 engaged"""
         return self.pin.value
 
-
-Stepper_Syringe_Pump = Precision_Stepper(step_pin=32, dir_pin=5, en_pin=33, step_time=1000)
+Stepper_Syringe_Pump = Precision_Stepper(step_pin=32, dir_pin=5, en_pin=33, step_time=100)
 Stepper_Autosampler = Precision_Stepper(step_pin=2, dir_pin=4, en_pin=15, step_time=1000)
 Steppers_Stirring = Precision_Stepper(step_pin=19, dir_pin=21, en_pin=18, step_time=1000)
 Pump = Peristaltic_Pump(pin=26) #18
@@ -104,6 +103,6 @@ Relation = (360 / 1.8) / 8
 
 Stepper_Syringe_Pump.power_on()
 Stepper_Syringe_Pump.set_dir(1)
-Stepper_Syringe_Pump.steps(5000)
+Stepper_Syringe_Pump.steps(50000)
 Stepper_Syringe_Pump.power_off()
 
