@@ -1,6 +1,3 @@
-# Escribe tu código aquí :-)
-# Escribe tu código aquí :-)
-# Escribe tu código aquí :-)
 from machine import Pin
 import time
 from time import sleep_us
@@ -105,4 +102,3 @@ Stepper_Syringe_Pump.power_on()
 Stepper_Syringe_Pump.set_dir(1)
 Stepper_Syringe_Pump.steps(100000)
 Stepper_Syringe_Pump.power_off()
-

@@ -1,4 +1,3 @@
-# Escribe tu código aquí :-)
 from machine import Pin
 import time
 from time import sleep_us

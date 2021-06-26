@@ -1,4 +1,3 @@
-# Escribe tu código aquí :-)
 import time
 from utime import ticks_add
 from utime import ticks_diff
@@ -97,15 +96,15 @@ def Stepper_constant_speed(stepper, speed, time=1):
     """
     stepper.steps(time / (2 * stepper.step_time))
 
-Step_angle = 1.8
-####
+
 #General parameters
 Number_of_experiments = 1
 Number_of_cleaning_cycles = 5
 Experiment_Duration_in_minutes = 4 # Only integrers
 Cleaning_cycle_duration_in_seconds = 10
 Stirring_rate_rpm = 150 ### do not put rpm higer than 150
-#############################################################
+Step_angle = 1.8
+
 Tanto_por_uno_vuelta = Step_angle / 360
 delay_in_minutes = (Tanto_por_uno_vuelta / 2) / Stirring_rate_rpm
 delay_in_seconds = delay_in_minutes * 60

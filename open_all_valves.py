@@ -1,6 +1,3 @@
-# Escribe tu código aquí :-)
-# Escribe tu código aquí :-)
-# Escribe tu código aquí :-)
 from machine import Pin
 import time
 from time import sleep_us
@@ -96,18 +93,15 @@ Pump = Peristaltic_Pump(pin=26) #18
 Valve_Cathode = Valve(pin=27)
 Valve_Anode = Valve(pin=14)
 
-
 Stepper_Syringe_Pump.power_off()
 Stepper_Autosampler.power_off()
 Steppers_Stirring.power_off()
 Pump.engage()
 Pump.disengage()
 
-
 Valve_Cathode.engage()
 time.sleep_ms(5000)
 Valve_Cathode.disengage()
-
 
 Valve_Anode.engage()
 time.sleep_ms(5000)
