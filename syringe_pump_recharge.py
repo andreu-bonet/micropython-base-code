@@ -103,6 +103,6 @@ Relation = (360 / 1.8) / 8
 
 Stepper_Syringe_Pump.power_on()
 Stepper_Syringe_Pump.set_dir(1)
-Stepper_Syringe_Pump.steps(50000)
+Stepper_Syringe_Pump.steps(100000)
 Stepper_Syringe_Pump.power_off()
 

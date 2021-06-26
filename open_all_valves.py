@@ -105,10 +105,10 @@ Pump.disengage()
 
 
 Valve_Cathode.engage()
-time.sleep_ms(4000)
+time.sleep_ms(5000)
 Valve_Cathode.disengage()
 
 
 Valve_Anode.engage()
-time.sleep_ms(4000)
+time.sleep_ms(5000)
 Valve_Anode.disengage()
